@@ -84,8 +84,21 @@ class DevTools
 
     function sshkey()
     {
-        $this->cli->passthru('pbcopy < ~/.ssh/id_rsa.pub');
-        info('Copied ssh key to your clipboard');
+        $command = null;
+        if (PHP_OS === 'Darwin') {
+            $command = 'pbcopy';
+        } else if (PHP_OS === 'Linux' && exec('which sxel') !== '') {
+            $command = 'xsel --clipboard --input';
+        } else if (PHP_OS === 'Linux' && exec('which xclip') !== '') {
+            $command = 'xclip -selection clipboard';
+        } else {
+            warning('No suitable method found to copy the ssh key on your system. Linux users should install either xsel or xclip');
+        }
+
+        if ($command !== null) {
+            $this->cli->passthru($command . ' < ~/.ssh/id_rsa.pub');
+            info('Copied ssh key to your clipboard');
+        }
     }
 
     function phpstorm()
