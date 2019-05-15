@@ -2,7 +2,21 @@
 
 ## Introduction
 
-Valet+ is a development environment for macOS. No Vagrant, no Docker, no `/etc/hosts` file.
+Valet Neutral (or ValetN) is a development environment for macOS **and Linux**. No Vagrant, no Docker, no `/etc/hosts` file.
+
+As neutral as Switzerland, and made in Switzerland. (pretty much hit two birds with one stone)
+
+### ValetN vs. Valet+
+
+Yet another Valet? Yes! The "official" Valet and Valet+ are developed for macOS, both lacking official support for Linux.
+
+Time to bring some neutrality in there. This project supports both Linux and macOS, pulling in changes from both upstreams and make them work on Linux too. This means, you can use this very same package on either system and it will work just the same. Depending on your OS, you can enjoy most of the features Valet+ provides.
+
+*Although there exists an inofficial Valet fork for Linux, it doesn't incorporate Valet+ features and is again only intended for use on a specific OS. In my opinion it also makes too many changes to the system, leaving you with a huge configuration mess of leftover files, if you ever decide to part ways with Valet.*
+
+Valet Neutral makes as little changes as possible to your main system. It is almost completely isolated from your main system, while also following the main philosophy of Valet!
+
+Please note, this package is also intended to replace Valet/Valet+ and also uses the `valet` command. The documentation of Valet Neutral and Valet+ is pretty much the same.
 
 ### Valet vs. Valet+
 
@@ -12,11 +26,11 @@ Some of the documentation in this readme was taken from the Valet website and pr
 
 Since Valet+ is intended to replace Valet, it still uses the same `valet` command-line name. Any changes in its interface are documented below.
 
-### Why Valet/Valet+?
+### Features
 
-Valet+ configures your Mac to always run Nginx in the background when your machine starts. Then, using [DnsMasq](https://en.wikipedia.org/wiki/Dnsmasq), Valet+ proxies all requests on the `*.test` domain to point to sites installed on your local machine.
+ValetN configures your system to always run Nginx in the background when you start your system. Then, using [DnsMasq](https://en.wikipedia.org/wiki/Dnsmasq), ValetN proxies all requests on the `*.test` domain to point to sites installed on your local machine.
 
-In other words, a blazing fast development environment. Valet+ provides a great alternative if you want flexible basics or prefer extreme speed.
+In other words, a blazing fast development environment. ValetN provides a great alternative if you want flexible basics or prefer extreme speed.
 
 ### Differences from Valet
 
@@ -56,25 +70,25 @@ Here are a few key differences compared to the original Valet:
 
 ## Installation
 
-> :warning: Valet+ requires macOS and [Homebrew](https://brew.sh/). Before installation, you should make sure that no other programs such as Apache or Nginx are binding to your local machine's port 80.
+> :warning: ValetN requires [Homebrew](https://brew.sh/), both for macOS and Linux. (yes, Linux is also supported by now!) Before installation, you should make sure that no other programs such as Apache or Nginx are binding to your local machine's port 80. Also make sure you don't have a local DNS server occupying the DNS port.
 
 1. Install or update [Homebrew](https://brew.sh/) to the latest version using `brew update`.
 3. Add the Homebrew PHP tap for Valet+ via `brew tap henkrehorst/php`.
 3. Install PHP 7.2 using Homebrew via `brew install valet-php@7.2`.
 4. Install Composer using Homebrew via `brew install composer`.
-5. Install Valet+ with Composer via `composer global require weprovide/valet-plus`.
+5. Install ValetN with Composer via `composer global require xama5/valet-neutral`.
 6. Add `export PATH="$PATH:$HOME/.composer/vendor/bin"` to `.bash_profile` (for bash) or `.zshrc` (for zsh) depending on your shell (`echo $SHELL`)
 7. Run the `valet fix` command. This will check for common issues preventing Valet+ from installing.
-8. Run the `valet install` command. Optionally add `--with-mariadb` to use MariaDB instead of MySQL This will configure and install Valet+ and DnsMasq, and register Valet's daemon to launch when your system starts.
-9. Once Valet+ is installed, try pinging any `*.test` domain on your terminal using a command such as `ping -c1 foobar.test`. If Valet+ is installed correctly you should see this domain responding on `127.0.0.1`. If not you might have to restart your system. Especially when coming from the Dinghy (docker) solution.
+8. Run the `valet install` command. Optionally add `--with-mariadb` to use MariaDB instead of MySQL This will configure and install ValetN and DnsMasq, and register Valet's daemon to launch when your system starts.
+9. Once ValetN is installed, try pinging any `*.test` domain on your terminal using a command such as `ping -c1 foobar.test`. If ValetN is installed correctly you should see this domain responding on `127.0.0.1`. If not you might have to restart your system. Especially when coming from the Dinghy (docker) solution.
 
-> :information_source: Valet+ will automatically start its daemon each time your machine boots. There is no need to run `valet start` or `valet install` ever again once the initial Valet+ installation is complete.
+> :information_source: ValetN will automatically start its daemon each time your machine boots. There is no need to run `valet start` or `valet install` ever again once the initial ValetN installation is complete.
 
-> :information_source: To update Valet+ to the latest version use the `composer global require weprovide/valet-plus` command in your terminal. After upgrading, it is good practice to run the `valet install` command so Valet+ can make additional upgrades to your configuration files if necessary.
+> :information_source: To update ValetN to the latest version use the `composer global require xama5/valet-neutral` command in your terminal. After upgrading, it is good practice to run the `valet install` command so ValetN can make additional upgrades to your configuration files if necessary.
 
 ### Serving sites
 
-Once Valet+ is installed, you're ready to start serving sites. Valet+ provides a command to help you serve your sites: `valet park`. Which will register the current working directory as projects root. Generally this directory is `~/sites`.
+Once ValetN is installed, you're ready to start serving sites. ValetN provides a command to help you serve your sites: `valet park`. Which will register the current working directory as projects root. Generally this directory is `~/sites`.
 
 1. Create a `sites` directory: `mkdir ~/sites`
 2. `cd ~/sites`
@@ -87,7 +101,7 @@ For example:
 1. `mkdir ~/sites/example`
 2. `cd ~/sites/example`
 3. `echo "<?php echo 'Valet+ at your service';" > index.php`
-4. Go to `http://example.test`, you should see `Valet+ at your service`
+4. Go to `http://example.test`, you should see `ValetN at your service`
 
 ## Switching PHP version
 
@@ -158,7 +172,7 @@ valet ioncube off
 ```
 
 ## Database
-Valet+ automatically installs MySQL 5.7 with 5.6 compatibility mode included. It includes a tweaked `my.cnf` which is aimed at improving speed.
+ValetN automatically installs MySQL 5.7 with 5.6 compatibility mode included. It includes a tweaked `my.cnf` which is aimed at improving speed.
 
 Username: `root`
 
@@ -376,13 +390,13 @@ Elasticsearch 2.4 is installed by default because [Magento 2.1 does not support 
 
 ## Framework specific development tools
 
-Valet+ will automatically install framework specific development tools for you:
+ValetN will automatically install framework specific development tools for you:
 
 - [wp-cli](http://wp-cli.org/) available as `wp`
 - [n98-magerun](https://github.com/netz98/n98-magerun) available as `magerun`
 - [n98-magerun2](https://github.com/netz98/n98-magerun2) available as `magerun2` for you.
 
-## Git Tower
+## Git Tower (macOS only)
 
 Open current git project in [Tower](https://www.git-tower.com/mac/)
 
@@ -398,7 +412,7 @@ Open current git project in [PhpStorm](https://www.jetbrains.com/phpstorm/)
 valet phpstorm
 ```
 
-## SourceTree
+## SourceTree (macOS only)
 
 Open current git project in [SourceTree](https://www.sourcetreeapp.com/)
 
@@ -474,7 +488,7 @@ The PHP.ini location is `/usr/local/etc/valet-php/VERSION/php.ini`.
 ## Valet drivers
 Valet uses drivers to handle requests. You can read more about those [here](https://laravel.com/docs/5.4/valet#custom-valet-drivers).
 
-~~When using Valet+ drivers are automatically cached using APCu to avoid doing a driver lookup every time there is a request. You can reset the cache for a specific site by running `valet which`.~~
+~~When using ValetN drivers are automatically cached using APCu to avoid doing a driver lookup every time there is a request. You can reset the cache for a specific site by running `valet which`.~~
 APCu is temporarily turned off due to a compatibility issue with PHP-FPM, see https://github.com/weprovide/valet-plus/issues/49.
 
 By default these are included:
@@ -624,15 +638,13 @@ This project is a fork of [laravel/valet](https://github.com/laravel/valet). Tha
 - Taylor Otwell ([@taylorotwell](https://github.com/taylorotwell))
 - Adam Wathan ([@adamwathan](https://github.com/adamwathan))
 
-## Valet+ Authors
+And a huge thanks to Valet+ and its contributors.
 
 - Tim Neutkens ([@timneutkens](https://github.com/timneutkens))
 - Lou van der Laarse ([@Neodork](https://github.com/Neodork))
 - Sam Granger ([@samgranger](https://github.com/samgranger))
 
 
-## Get in touch
+## ValetN Authors
 
-[![slack](https://p9.zdassets.com/hc/theme_assets/138842/200037786/logo.png)](https://join.slack.com/t/valet-plus/shared_invite/enQtNDE2MjU2NzgyNjQwLTc4MmI0ZTlhM2FiODRjNmQxN2RlZDVlN2E2YjUwMDBjNGViYjVkNWQ4ODJjYzI3M2U4ZGM5M2Q3ZGQ3ZDQ2YjY)
-
-We have a slack workspace available [which you can join](https://join.slack.com/t/valet-plus/shared_invite/enQtNDE2MjU2NzgyNjQwLTc4MmI0ZTlhM2FiODRjNmQxN2RlZDVlN2E2YjUwMDBjNGViYjVkNWQ4ODJjYzI3M2U4ZGM5M2Q3ZGQ3ZDQ2YjY).
+- Oliver La ([@xama5](https://github.com/xama5))
