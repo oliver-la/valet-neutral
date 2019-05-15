@@ -117,18 +117,19 @@ class DevTools
     function vscode()
     {
         info('Opening Visual Studio Code');
-        $command = false;
 
-        if ($this->files->exists('/usr/local/bin/code')) {
-            $command = '/usr/local/bin/code';
-        }
+        $names = array('code', 'vscode');
 
-        if ($this->files->exists('/usr/local/bin/vscode')) {
-            $command = '/usr/local/bin/vscode';
+        foreach ($names as $name) {
+            $command = exec("which $name");
+
+            if ($command !== '') {
+                break;
+            }
         }
 
         if (!$command) {
-            throw new Exception('/usr/local/bin/code command not found. Please install it.');
+            throw new Exception('vscode not found. Please install it.');
         }
 
         $output = $this->cli->runAsUser($command . ' $(git rev-parse --show-toplevel)');
