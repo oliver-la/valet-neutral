@@ -44,16 +44,6 @@ class Brew
     }
 
     /**
-     * Return name of the nginx service installed via Homebrewed.
-     *
-     * @return string
-     */
-    function nginxServiceName()
-    {
-        return $this->installed('nginx-full') ? 'nginx-full' : 'nginx';
-    }
-
-    /**
      * Ensure that the given formula is installed.
      *
      * @param  string $formula
@@ -189,8 +179,8 @@ class Brew
             if ($this->installed($service)) {
                 info('[' . $service . '] Restarting');
 
-                $this->cli->quietly('sudo brew services stop ' . $service);
-                $this->cli->quietly('sudo brew services start ' . $service);
+                $this->cli->quietly(Mon::BINARY . ' stop ' . $service);
+                $this->cli->quietly(Mon::BINARY . ' start ' . $service);
             }
         }
     }
@@ -208,7 +198,7 @@ class Brew
             if ($this->installed($service)) {
                 info('[' . $service . '] Stopping');
 
-                $this->cli->quietly('sudo brew services stop ' . $service);
+                $this->cli->quietly(Mon::BINARY . ' stop ' . $service);
             }
         }
     }

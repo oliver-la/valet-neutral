@@ -144,7 +144,7 @@ class Nginx
     {
         $this->lint();
 
-        $this->brew->restartService($this->brew->nginxServiceName());
+        $this->brew->restartService('nginx');
     }
 
     /**
@@ -156,7 +156,7 @@ class Nginx
     {
         info('[nginx] Stopping');
 
-        $this->cli->quietly('sudo brew services stop '. $this->brew->nginxServiceName());
+        $this->brew->stopService('nginx');
     }
 
     /**

@@ -3,13 +3,15 @@
 # Original Author: github.com/jgallen23/mongroup.git
 # Modified for use with ValetN
 
+WORKING_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 VERSION="0.4.1"
-CONFIG=$HOME/.valet/mongroup.conf
+CONFIG=$WORKING_DIR/../mongroup.conf
 PIDS=$HOME/.valet/pids
 LOGS=$HOME/.valet/logs
 ON_RESTART=:
 ON_ERROR=:
-MON=./mon
+MON="sudo $WORKING_DIR/mon"
 
 mkdir -p $PIDS
 mkdir -p $LOGS
@@ -26,7 +28,6 @@ usage() {
 
   Options:
 
-    -c, --config <path>  set config path. defaults to ./mongroup.conf
     -V, --version        output program version
     -h, --help           output help information
 
@@ -106,15 +107,6 @@ read_config() {
 }
 
 #
-# Set config <file>
-#
-
-set_config() {
-  test -f $1 || abort invalid --config path
-  CONFIG=$1
-}
-
-#
 # Start proc <name> with <cmd>
 #
 
@@ -185,7 +177,7 @@ stop() {
     local name=${NAMES[i]}
     if [ -z "$app" -o "$app" == "$name" ]; then
       printf "  \e[36m%10s\e[m : %s\n" "stop" $name
-      kill -s SIGQUIT $(cat $PIDS/$name.mon.pid) 2> /dev/null
+      sudo kill -s SIGQUIT $(tr -d '\0' < $PIDS/$name.mon.pid) 2> /dev/null
     fi
   done
 }
@@ -227,17 +219,6 @@ tail_log() {
   fi
 }
 
-# default to status
-
-if [ $# -eq 0 ] || [ $# -eq 2 ]; then
-  # optional config, but no status command
-  if [ $# -eq 2 ]; then 
-    set_config $2
-  fi
-  status
-  exit
-fi
-
 #
 # Parse argv.
 #
@@ -253,10 +234,6 @@ while test $# -ne 0; do
     -V|--version)
       echo $VERSION
       exit
-      ;;
-    -c|--config)
-      set_config $1
-      shift
       ;;
     start)
       echo

@@ -6,6 +6,8 @@ namespace Valet;
 
 class Mon
 {
+    const BINARY = __DIR__ . '/../../bin/mongroup';
+
     static function install()  {
         passthru(
             sprintf(
