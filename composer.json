@@ -1,7 +1,6 @@
 {
-    "name": "weprovide/valet-plus",
-    "app": "Valet+",
-    "description": "Blazing fast macOS PHP development environment",
+    "name": "xama5/valet-neutral",
+    "description": "Blazing fast PHP development environment",
     "license": "MIT",
     "authors": [
         {
@@ -19,6 +18,10 @@
         {
             "name": "Johann Zelger",
             "email": "j.zelger@techdivision.com"
+        },
+        {
+            "name": "Oliver La",
+            "email": "contact@oliver.la"
         }
     ],
     "autoload": {
@@ -32,7 +35,8 @@
         }
     },
     "replace": {
-        "laravel/valet": "*"
+        "laravel/valet": "*",
+        "weprovide/valet-plus": "*"
     },
     "require": {
         "php": ">=5.6",
