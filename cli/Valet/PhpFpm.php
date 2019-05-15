@@ -6,7 +6,7 @@ use DomainException;
 
 class PhpFpm
 {
-    const PHP_FORMULA_NAME = 'valet-php@';
+    const PHP_FORMULA_NAME = 'php@';
     const PHP_V56_VERSION = '5.6';
     const PHP_V70_VERSION = '7.0';
     const PHP_V71_VERSION = '7.1';
@@ -26,12 +26,12 @@ class PhpFpm
         self::PHP_V70_VERSION
     ];
 
-    const LOCAL_PHP_FOLDER = HOMEBREW_PREFIX . '/etc/valet-php/';
+    const LOCAL_PHP_FOLDER = HOMEBREW_PREFIX . '/etc/php/';
 
     var $brew, $cli, $files, $pecl, $peclCustom;
 
     const DEPRECATED_PHP_TAP = 'homebrew/php';
-    const VALET_PHP_BREW_TAP = 'henkrehorst/php';
+    const VALET_PHP_BREW_TAP = 'homebrew/core';
 
     /**
      * Create a new PHP FPM class instance.
@@ -58,13 +58,6 @@ class PhpFpm
     {
         if (!$this->hasInstalledPhp()) {
             $this->brew->ensureInstalled($this->getFormulaName(self::PHP_V71_VERSION));
-        }
-
-        if (!$this->brew->hasTap(self::VALET_PHP_BREW_TAP)) {
-            info("[BREW TAP] Installing " . self::VALET_PHP_BREW_TAP);
-            $this->brew->tap(self::VALET_PHP_BREW_TAP);
-        } else {
-            info("[BREW TAP] " . self::VALET_PHP_BREW_TAP . " already installed");
         }
 
         $version = $this->linkedPhp();
@@ -168,8 +161,10 @@ class PhpFpm
         info("[php@$currentVersion] Unlinking");
         output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[$currentVersion]));
 
-        info('[libjpeg] Relinking');
-        $this->cli->passthru('sudo ln -fs /usr/local/Cellar/jpeg/8d/lib/libjpeg.8.dylib /usr/local/opt/jpeg/lib/libjpeg.8.dylib');
+        if (PHP_OS === 'Darwin') {
+            info('[libjpeg] Relinking');
+            $this->cli->passthru('sudo ln -fs /usr/local/Cellar/jpeg/8d/lib/libjpeg.8.dylib /usr/local/opt/jpeg/lib/libjpeg.8.dylib');
+        }
 
         info("[php@$version] Linking");
         output($this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[$version] . ' --force --overwrite'));
@@ -299,7 +294,7 @@ class PhpFpm
         $versions = self::SUPPORTED_PHP_FORMULAE;
 
         foreach ($versions as $version => $brewname) {
-            if (strpos($resolvedPath, '/' . $brewname . '/') !== false) {
+            if (strpos($resolvedPath, 'php/' . $version) !== false) {
                 return $version;
             }
         }
@@ -465,12 +460,12 @@ class PhpFpm
             output($this->cli->runAsUser('brew uninstall php72'));
         }
 
-        // If the current php is not 7.1, link 7.1.
+        // If the current php is not 7.3, link 7.3.
         info('Installing and linking new PHP homebrew/core version.');
-        output($this->cli->runAsUser('brew uninstall ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V71_VERSION]));
-        output($this->cli->runAsUser('brew install ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V71_VERSION]));
-        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V71_VERSION]));
-        output($this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V71_VERSION] . ' --force --overwrite'));
+        output($this->cli->runAsUser('brew uninstall ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V73_VERSION]));
+        output($this->cli->runAsUser('brew install ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V73_VERSION]));
+        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V73_VERSION]));
+        output($this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V73_VERSION] . ' --force --overwrite'));
 
         if ($this->brew->hasTap(self::DEPRECATED_PHP_TAP)) {
             info('[brew] untapping formulae ' . self::DEPRECATED_PHP_TAP);
@@ -478,7 +473,7 @@ class PhpFpm
         }
 
         warning("Please check your linked php version, you might need to restart your terminal!" .
-            "\nLinked PHP should be php 7.1:");
+            "\nLinked PHP should be php 7.3:");
         output($this->cli->runAsUser('php -v'));
     }
 }

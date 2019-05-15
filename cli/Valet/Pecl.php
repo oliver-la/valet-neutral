@@ -133,9 +133,9 @@ class Pecl extends AbstractPecl
     protected function install($extension, $version = null)
     {
         if ($version === null) {
-            $result = $this->cli->runAsUser("pecl install $extension");
+            $result = $this->cli->runAsUser("sudo pecl install $extension");
         } else {
-            $result = $this->cli->runAsUser("pecl install $extension-$version");
+            $result = $this->cli->runAsUser("sudo pecl install $extension-$version");
         }
 
         $alias = $this->getExtensionAlias($extension);
