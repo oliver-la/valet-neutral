@@ -44,4 +44,32 @@ class Ngrok
             }
         }
     }
+
+    static function install() {
+        $arch = strtolower(PHP_OS . '-' . php_uname("m"));
+
+        $packages = array(
+            'linux-aarch64_be' => 'https://bin.equinox.io/a/nmkK3DkqZEB/ngrok-2.2.8-linux-arm64.zip',
+            'linux-aarch64' => 'https://bin.equinox.io/a/nmkK3DkqZEB/ngrok-2.2.8-linux-arm64.zip',
+            'linux-armv8b' => 'https://bin.equinox.io/a/nmkK3DkqZEB/ngrok-2.2.8-linux-arm64.zip',
+            'linux-armv8l' => 'https://bin.equinox.io/a/nmkK3DkqZEB/ngrok-2.2.8-linux-arm64.zip',
+            'linux-x86_64' => 'https://bin.equinox.io/a/nmkK3DkqZEB/ngrok-2.2.8-linux-arm64.zip',
+            'linux-arm' => 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip',
+        );
+
+        if (in_array($arch, array_keys($packages))) {
+            $url = $packages[$arch];
+            $zip_path = __DIR__ . '/../../bin/ngrok.zip';
+
+            copy($url, $zip_path);
+
+            $zip = new \ZipArchive();
+            $zip->open($zip_path);
+            $zip->extractTo(dirname($zip_path) . '/');
+
+            unlink($zip_path);
+        } else {
+            throw new DomainException('Unable to find a suitable ngrok binary for your architecture: ' . $arch);
+        }
+    }
 }
