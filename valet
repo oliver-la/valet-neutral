@@ -26,12 +26,6 @@ then
     DIR=$(php -r "echo realpath('$DIR/../laravel/valet');")
 fi
 
-if [[ "$EUID" -ne 0 ]]
-then
-    sudo $SOURCE "$@"
-    exit
-fi
-
 # If the command is the "share" command we will need to resolve out any
 # symbolic links for the site. Before starting Ngrok, we will fire a
 # process to retrieve the live Ngrok tunnel URL in the background.

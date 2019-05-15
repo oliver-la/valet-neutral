@@ -4,9 +4,6 @@ namespace Valet;
 
 class Elasticsearch
 {
-    const NGINX_CONFIGURATION_STUB = __DIR__ . '/../stubs/elasticsearch.conf';
-    CONST NGINX_CONFIGURATION_PATH = HOMEBREW_PREFIX . '/etc/nginx/valet/elasticsearch.conf';
-
     var $brew;
     var $cli;
     var $files;
@@ -91,17 +88,5 @@ class Elasticsearch
     function uninstall()
     {
         $this->stop();
-    }
-
-    function updateDomain($domain)
-    {
-        $this->files->putAsUser(
-            self::NGINX_CONFIGURATION_PATH,
-            str_replace(
-                ['VALET_DOMAIN'],
-                [$domain],
-                $this->files->get(self::NGINX_CONFIGURATION_PATH)
-            )
-        );
     }
 }

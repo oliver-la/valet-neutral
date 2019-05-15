@@ -5,7 +5,7 @@
  */
 $inTestingEnvironment = strpos($_SERVER['SCRIPT_NAME'], 'phpunit') !== false;
 
-if (PHP_OS !== 'Darwin' && ! $inTestingEnvironment) {
+if (PHP_OS !== 'Darwin' && PHP_OS !== 'Linux' && ! $inTestingEnvironment) {
     echo 'Valet only supports the macOS and Linux as operating systems.'.PHP_EOL;
 
     exit(1);
