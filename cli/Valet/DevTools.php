@@ -141,6 +141,10 @@ class DevTools
 
     function tower()
     {
+        if (PHP_OS !== 'Darwin') {
+            throw new Exception('This command is only supported on macOS');
+        }
+
         info('Opening git tower');
         if (!$this->files->exists('/Applications/Tower.app/Contents/MacOS/gittower')) {
             throw new Exception('gittower command not found. Please install gittower by following the instructions provided here: https://www.git-tower.com/help/mac/integration/cli-tool');
