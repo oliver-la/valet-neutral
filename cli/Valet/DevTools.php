@@ -92,13 +92,11 @@ class DevTools
         } else if (PHP_OS === 'Linux' && exec('which xclip') !== '') {
             $command = 'xclip -selection clipboard';
         } else {
-            warning('No suitable method found to copy the ssh key on your system. Linux users should install either xsel or xclip');
+            throw new Exception('No suitable method found to copy the ssh key on your system. Linux users should install either xsel or xclip');
         }
 
-        if ($command !== null) {
-            $this->cli->passthru($command . ' < ~/.ssh/id_rsa.pub');
-            info('Copied ssh key to your clipboard');
-        }
+        $this->cli->passthru($command . ' < ~/.ssh/id_rsa.pub');
+        info('Copied ssh key to your clipboard');
     }
 
     function phpstorm()
