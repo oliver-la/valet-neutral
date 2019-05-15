@@ -43,7 +43,9 @@ class Varnish extends AbstractService
             info('[varnish] already installed');
         } else {
             $this->brew->installOrFail('varnish');
-            $this->cli->quietly('sudo brew services stop varnish');
+            if (PHP_OS === 'Darwin') {
+                $this->cli->quietly('sudo brew services stop varnish');
+            }
         }
         $this->setEnabled(self::STATE_ENABLED);
         $this->restart();

@@ -93,7 +93,7 @@ class PhpFpm
      */
     function restart()
     {
-        $this->brew->restartService(self::SUPPORTED_PHP_FORMULAE[$this->linkedPhp()]);
+        $this->brew->restartService('php-fpm');
     }
 
     /**
@@ -103,7 +103,7 @@ class PhpFpm
      */
     function stop()
     {
-        $this->brew->stopService(self::SUPPORTED_PHP_FORMULAE);
+        $this->brew->stopService('php-fpm');
     }
 
     /**
@@ -375,6 +375,7 @@ class PhpFpm
         $systemZoneName = str_replace('/var/db/timezone/zoneinfo/', '', $systemZoneName);
         $contents = $this->files->get(__DIR__ . '/../stubs/z-performance.ini');
         $contents = str_replace('TIMEZONE', $systemZoneName, $contents);
+        $contents = str_replace('$HOMEBREW_PREFIX', HOMEBREW_PREFIX, $contents);
 
         $iniPath = $this->iniPath();
         $this->files->ensureDirExists($iniPath, user());

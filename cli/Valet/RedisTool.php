@@ -45,7 +45,9 @@ class RedisTool extends AbstractService
             info('[redis] already installed');
         } else {
             $this->brew->installOrFail('redis');
-            $this->cli->quietly('sudo brew services stop redis');
+            if (PHP_OS === 'Darwin') {
+                $this->cli->quietly('sudo brew services stop redis');
+            }
         }
 
         $this->installConfiguration();
@@ -70,7 +72,9 @@ class RedisTool extends AbstractService
      */
     function installConfiguration()
     {
-        $this->files->copy(__DIR__.'/../stubs/redis.conf', static::REDIS_CONF);
+        $contents = $this->files->get(__DIR__.'/../stubs/redis.conf');
+        $contents = str_replace('$HOMEBREW_PREFIX', HOMEBREW_PREFIX, $contents);
+        $this->files->putAsUser(static::REDIS_CONF, $contents);
     }
 
     /**
@@ -85,7 +89,7 @@ class RedisTool extends AbstractService
         }
 
         info('[redis] Restarting');
-        $this->cli->quietlyAsUser('brew services restart redis');
+        $this->brew->restartService('redis');
     }
 
     /**
@@ -100,8 +104,7 @@ class RedisTool extends AbstractService
         }
 
         info('[redis] Stopping');
-        $this->cli->quietly('sudo brew services stop redis');
-        $this->cli->quietlyAsUser('brew services stop redis');
+        $this->brew->stopService('redis');
     }
 
     /**

@@ -71,7 +71,7 @@ class RabbitMq extends AbstractService
         }
 
         info('[rabbitmq] Restarting');
-        $this->cli->quietlyAsUser('brew services restart rabbitmq');
+        $this->brew->restartService('rabbitmq');
     }
 
     /**
@@ -86,7 +86,7 @@ class RabbitMq extends AbstractService
         }
 
         info('[rabbitmq] Stopping');
-        $this->cli->quietlyAsUser('brew services stop rabbitmq');
+        $this->brew->stopService('rabbitmq');
     }
 
     /**

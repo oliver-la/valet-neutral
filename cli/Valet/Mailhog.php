@@ -73,7 +73,7 @@ class Mailhog extends AbstractService
         }
 
         info('[mailhog] Restarting');
-        $this->cli->quietlyAsUser('brew services restart mailhog');
+        $this->brew->restartService('mailhog');
     }
 
     /**
@@ -88,7 +88,7 @@ class Mailhog extends AbstractService
         }
 
         info('[mailhog] Stopping');
-        $this->cli->quietlyAsUser('brew services stop mailhog');
+        $this->brew->stopService('mailhog');
     }
 
     /**

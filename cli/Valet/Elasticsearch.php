@@ -65,7 +65,7 @@ class Elasticsearch
         }
 
         info('[elasticsearch] Restarting');
-        $this->cli->quietlyAsUser('brew services restart elasticsearch@2.4');
+        $this->brew->restartService('elasticsearch');
     }
 
     /**
@@ -80,8 +80,7 @@ class Elasticsearch
         }
 
         info('[elasticsearch] Stopping');
-        $this->cli->quietly('sudo brew services stop elasticsearch@2.4');
-        $this->cli->quietlyAsUser('brew services stop elasticsearch@2.4');
+        $this->brew->stopService('elasticsearch');
     }
 
     /**

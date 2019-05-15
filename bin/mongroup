@@ -13,6 +13,8 @@ ON_RESTART=:
 ON_ERROR=:
 MON="sudo $WORKING_DIR/mon"
 
+ENV="HOMEBREW_PREFIX='$HOMEBREW_PREFIX'"
+
 mkdir -p $PIDS
 mkdir -p $LOGS
 touch $CONFIG
@@ -117,7 +119,7 @@ start_proc() {
     -l $LOGS/$1.log \
     --on-error "$ON_ERROR $name" \
     --on-restart "$ON_RESTART $name" \
-    "$2"
+    "$ENV; $2"
 }
 
 #

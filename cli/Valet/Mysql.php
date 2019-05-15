@@ -62,8 +62,11 @@ class Mysql
         }
 
         $this->removeConfiguration($type);
-        $this->files->copy(__DIR__ . '/../stubs/limit.maxfiles.plist', static::MAX_FILES_CONF);
-        $this->cli->quietly('launchctl load -w ' . static::MAX_FILES_CONF);
+
+        if (PHP_OS === 'Darwin') {
+            $this->files->copy(__DIR__ . '/../stubs/limit.maxfiles.plist', static::MAX_FILES_CONF);
+            $this->cli->quietly('launchctl load -w ' . static::MAX_FILES_CONF);
+        }
 
         if (!$this->installedVersion()) {
             $this->brew->installOrFail($type);
@@ -135,8 +138,9 @@ class Mysql
         $version = $this->installedVersion('mysql@5.7');
         info('[' . $version . '] Stopping');
 
-        $this->cli->quietly('sudo brew services stop ' . $version);
-        $this->cli->quietlyAsUser('brew services stop ' . $version);
+        $version = explode('@', $version)[0];
+
+        $this->brew->stopService($version);
     }
 
     /**
@@ -172,7 +176,9 @@ class Mysql
     {
         $version = $this->installedVersion() ?: 'mysql@5.7';
         info('[' . $version . '] Restarting');
-        $this->cli->quietlyAsUser('brew services restart ' . $version);
+        $version = explode('@', $version)[0];
+
+        $this->brew->restartService($version);
     }
 
     /**
@@ -461,6 +467,10 @@ class Mysql
      */
     public function openSequelPro($name = '')
     {
+        if (PHP_OS !== 'Darwin') {
+            return;
+        }
+
         $tmpName = \tempnam(\sys_get_temp_dir(), 'sequelpro') . '.spf';
 
         $contents = $this->files->get(__DIR__ . '/../stubs/sequelpro.spf');
