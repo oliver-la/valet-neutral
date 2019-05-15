@@ -1,0 +1,288 @@
+#!/bin/bash
+
+# Original Author: github.com/jgallen23/mongroup.git
+# Modified for use with ValetN
+
+VERSION="0.4.1"
+CONFIG=$HOME/.valet/mongroup.conf
+PIDS=$HOME/.valet/pids
+LOGS=$HOME/.valet/logs
+ON_RESTART=:
+ON_ERROR=:
+MON=./mon
+
+mkdir -p $PIDS
+mkdir -p $LOGS
+touch $CONFIG
+
+#
+# Output usage.
+#
+
+usage() {
+  cat <<-EOF
+
+  Usage: mongroup [options] [command]
+
+  Options:
+
+    -c, --config <path>  set config path. defaults to ./mongroup.conf
+    -V, --version        output program version
+    -h, --help           output help information
+
+  Commands:
+
+    start [app]          start [app] or all apps
+    restart [app]        restart [app] or all apps
+    stop [app]           stops [app] or all apps
+    status               shows the status of all running apps
+    log [app]            tail the [app]'s log or all apps
+    tail [app]           tail -f the [app]'s log or all apps
+    less [app]           runs the log files through less
+
+EOF
+}
+
+#
+# Check if <pid> is alive.
+#
+
+alive() {
+  kill -0 $1 2> /dev/null
+}
+
+#
+# Abort with <msg ...>
+#
+
+abort() {
+  echo
+  echo "  $@" 1>&2
+  echo
+  exit 1
+}
+
+#
+# Read configuration file.
+#
+
+read_config() {
+  i=0
+  while read line; do
+  if [[ "$line" =~ ^[^#]*= ]]; then
+    n=${line%% =*}
+    v=${line##*= }
+    if [[ "$n" == "pids" ]]; then
+      PIDS=$v
+    elif [[ "$n" == "logs" ]]; then
+      LOGS=$v
+    elif [[ "$n" == "on-restart" ]]; then
+      ON_RESTART=$v
+    elif [[ "$n" == "on-error" ]]; then
+      ON_ERROR=$v
+    else
+      NAMES[i]=$n
+      CMDS[i]=$v
+      ((i++))
+    fi
+  fi
+  done < $CONFIG
+
+  if [ ! -d $PIDS ]; then
+    abort $PIDS directory doesn\'t exist
+  fi
+
+  if [ ! -w $PIDS ]; then
+    abort $PIDS directory is not writable
+  fi
+
+  if [ ! -d $LOGS ]; then
+    abort $LOGS directory doesn\'t exist
+  fi
+
+  if [ ! -w $LOGS ]; then
+    abort $LOGS directory is not writable
+  fi
+}
+
+#
+# Set config <file>
+#
+
+set_config() {
+  test -f $1 || abort invalid --config path
+  CONFIG=$1
+}
+
+#
+# Start proc <name> with <cmd>
+#
+
+start_proc() {
+  printf "  \e[36m%10s\e[m : %s\n" "start" $name
+  $MON -d -p $PIDS/$1.pid \
+    -m $PIDS/$1.mon.pid \
+    -l $LOGS/$1.log \
+    --on-error "$ON_ERROR $name" \
+    --on-restart "$ON_RESTART $name" \
+    "$2"
+}
+
+#
+# Start processes.
+#
+
+start() {
+  read_config
+  local app=$1
+  for i in ${!NAMES[@]}; do
+    local name=${NAMES[i]}
+    local pidfile=$PIDS/$name.pid
+    if [ -z "$app" -o "$app" == "$name" ]; then
+      if [ -f $pidfile ]; then
+        local pid=$(cat $pidfile)
+        alive $pid
+        if [ $? -eq 0 ]; then
+          printf "  \e[36m%10s\e[m : %s\n" "running" $name
+        else
+          start_proc $name "${CMDS[i]}"
+        fi
+      else
+        start_proc $name "${CMDS[i]}"
+      fi
+    fi
+  done
+}
+
+#
+# Check status.
+#
+
+status() {
+  read_config
+  echo
+  for i in ${!NAMES[@]}; do
+    local name=${NAMES[i]}
+    local pidfile=$PIDS/$name.pid
+    printf "  %10s : " $name
+    if [ -f $pidfile ]; then
+      echo `$MON --pidfile $pidfile --status`
+    else
+      printf "\e[31mdead\e[m\n"
+    fi
+  done
+  echo
+}
+
+#
+# Stop processes.
+#
+
+stop() {
+  read_config
+  local app=$1
+  for i in ${!NAMES[@]}; do
+    local name=${NAMES[i]}
+    if [ -z "$app" -o "$app" == "$name" ]; then
+      printf "  \e[36m%10s\e[m : %s\n" "stop" $name
+      kill -s SIGQUIT $(cat $PIDS/$name.mon.pid) 2> /dev/null
+    fi
+  done
+}
+
+#
+# Restart processes or [app].
+#
+
+restart() {
+  stop $1
+  sleep 1
+  start $1
+}
+
+#
+# Tail logs.
+#
+
+tail_log() {
+  read_config
+  local app=$2
+  local arg=$1
+  local log_files=
+  local follow=
+
+  for i in ${!NAMES[@]}; do
+    if [ -z "$app" -o "$app" == "${NAMES[i]}" ]; then
+      log_files[i]="$LOGS/${NAMES[i]}.log"
+    fi
+  done
+
+  if [[ "$arg" == "less" ]]; then
+    less -R ${log_files[@]}
+  else
+    if [ "$arg" == "logf" -o "$arg" == "tail" ]; then
+      follow="-f"
+    fi
+    tail -n 30 $follow ${log_files[@]}
+  fi
+}
+
+# default to status
+
+if [ $# -eq 0 ] || [ $# -eq 2 ]; then
+  # optional config, but no status command
+  if [ $# -eq 2 ]; then 
+    set_config $2
+  fi
+  status
+  exit
+fi
+
+#
+# Parse argv.
+#
+
+while test $# -ne 0; do
+  arg=$1
+  shift
+  case $arg in
+    -h|--help)
+      usage
+      exit
+      ;;
+    -V|--version)
+      echo $VERSION
+      exit
+      ;;
+    -c|--config)
+      set_config $1
+      shift
+      ;;
+    start)
+      echo
+      start $1
+      echo
+      exit
+      ;;
+    status)
+      status
+      exit
+      ;;
+    restart)
+      echo
+      restart $1
+      echo
+      exit
+      ;;
+    stop)
+      echo
+      stop $1
+      echo
+      exit
+      ;;
+    log|logf|less|tail)
+      tail_log $arg $1
+      exit
+      ;;
+  esac
+done

@@ -3,4 +3,3 @@ vendor/
 composer.lock
 error.log
 .idea/
-bin/

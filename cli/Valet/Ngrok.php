@@ -59,15 +59,14 @@ class Ngrok
 
         if (in_array($arch, array_keys($packages))) {
             $url = $packages[$arch];
-            $zip_path = __DIR__ . '/../../bin/ngrok.zip';
 
-            copy($url, $zip_path);
-
-            $zip = new \ZipArchive();
-            $zip->open($zip_path);
-            $zip->extractTo(dirname($zip_path) . '/');
-
-            unlink($zip_path);
+            passthru(
+                sprintf(
+                    "(cd %s && curl -L# %s > ngrok.zip && unzip -o ngrok.zip && rm ngrok.zip)",
+                    __DIR__ . '/../../bin',
+                    $url
+                )
+            );
         } else {
             throw new DomainException('Unable to find a suitable ngrok binary for your architecture: ' . $arch);
         }
