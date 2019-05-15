@@ -45,7 +45,8 @@
         "symfony/process": "~2.7|~3.0",
         "nategood/httpful": "~0.2",
         "tightenco/collect": "~5.4.0",
-        "sebastian/version": "^2.0"
+        "sebastian/version": "^2.0",
+        "ext-zip": "*"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
@@ -53,5 +54,10 @@
     },
     "bin": [
         "valet"
-    ]
+    ],
+    "scripts": {
+        "post-install-cmd": [
+            "Valet\\Ngrok::install"
+        ]
+    }
 }
