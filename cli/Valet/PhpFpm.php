@@ -26,7 +26,7 @@ class PhpFpm
         self::PHP_V70_VERSION
     ];
 
-    const LOCAL_PHP_FOLDER = '/usr/local/etc/valet-php/';
+    const LOCAL_PHP_FOLDER = HOMEBREW_PREFIX . '/etc/valet-php/';
 
     var $brew, $cli, $files, $pecl, $peclCustom;
 
@@ -69,7 +69,7 @@ class PhpFpm
 
         $version = $this->linkedPhp();
 
-        $this->files->ensureDirExists('/usr/local/var/log', user());
+        $this->files->ensureDirExists(HOMEBREW_PREFIX . '/var/log', user());
         $this->updateConfiguration();
         $this->pecl->updatePeclChannel();
         $this->pecl->installExtensions($version);
@@ -290,11 +290,11 @@ class PhpFpm
      */
     function linkedPhp()
     {
-        if (!$this->files->isLink('/usr/local/bin/php')) {
+        if (!$this->files->isLink(HOMEBREW_PREFIX . '/bin/php')) {
             throw new DomainException("Unable to determine linked PHP.");
         }
 
-        $resolvedPath = $this->files->readLink('/usr/local/bin/php');
+        $resolvedPath = $this->files->readLink(HOMEBREW_PREFIX . '/bin/php');
 
         $versions = self::SUPPORTED_PHP_FORMULAE;
 

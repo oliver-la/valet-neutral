@@ -34,17 +34,17 @@ class Binaries
         self::N98_MAGERUN => [
             'url' => 'https://files.magerun.net/n98-magerun-1.101.1.phar',
             'shasum' => '3c48fb685e569f2c7c97cca1dfbe2d20e6d7841db594b0d706924f517d8d3fd3',
-            'bin_location' => '/usr/local/bin/'
+            'bin_location' => HOMEBREW_PREFIX . '/bin/'
         ],
         self::N98_MAGERUN_2 => [
             'url' => 'https://files.magerun.net/n98-magerun2-3.0.8.phar',
             'shasum' => '0c103253a9b78f094f043ecb50639129200899774e1584a02047b683c7a51b8e',
-            'bin_location' => '/usr/local/bin/'
+            'bin_location' => HOMEBREW_PREFIX . '/bin/'
         ],
         self::DRUSH_LAUNCHER => [
             'url' => 'https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar',
             'shasum' => 'c3f32a800a2f18470b0010cd71c49e49ef5c087f8131eecfe9b686dc1f3f3d4e',
-            'bin_location' => '/usr/local/bin/'
+            'bin_location' => HOMEBREW_PREFIX . '/bin/'
         ]
     ];
 

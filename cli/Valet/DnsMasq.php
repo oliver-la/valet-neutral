@@ -7,8 +7,8 @@ class DnsMasq
     var $brew, $cli, $files;
 
     var $resolverPath = '/etc/resolver';
-    var $configPath = '/usr/local/etc/dnsmasq.conf';
-    var $exampleConfigPath = '/usr/local/opt/dnsmasq/dnsmasq.conf.example';
+    var $configPath = HOMEBREW_PREFIX . '/etc/dnsmasq.conf';
+    var $exampleConfigPath = HOMEBREW_PREFIX . '/opt/dnsmasq/dnsmasq.conf.example';
 
     /**
      * Create a new DnsMasq instance.

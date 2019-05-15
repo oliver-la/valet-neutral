@@ -6,7 +6,7 @@ class Valet
 {
     var $cli, $files;
 
-    var $valetBin = '/usr/local/bin/valet';
+    var $valetBin = HOMEBREW_PREFIX . '/bin/valet';
 
     /**
      * Create a new Valet instance.

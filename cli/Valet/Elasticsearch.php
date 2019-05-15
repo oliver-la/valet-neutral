@@ -5,7 +5,7 @@ namespace Valet;
 class Elasticsearch
 {
     const NGINX_CONFIGURATION_STUB = __DIR__ . '/../stubs/elasticsearch.conf';
-    CONST NGINX_CONFIGURATION_PATH = '/usr/local/etc/nginx/valet/elasticsearch.conf';
+    CONST NGINX_CONFIGURATION_PATH = HOMEBREW_PREFIX . '/etc/nginx/valet/elasticsearch.conf';
 
     var $brew;
     var $cli;

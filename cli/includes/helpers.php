@@ -12,6 +12,12 @@ define('VALET_HOME_PATH', $_SERVER['HOME'].'/.valet');
 define('VALET_SERVER_PATH', realpath(__DIR__ . '/../../server.php'));
 define('VALET_STATIC_PREFIX', '41c270e4-5535-4daa-b23e-c269744c2f45');
 
+define('HOMEBREW_PREFIX', $_ENV['HOMEBREW_PREFIX']);
+
+if (!HOMEBREW_PREFIX) {
+    throw new Exception('Homebrew needs to be installed. HOMEBREW_PREFIX is missing in your Environment.');
+}
+
 /**
  * Output the given text to the console.
  *

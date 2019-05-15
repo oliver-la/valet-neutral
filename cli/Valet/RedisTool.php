@@ -9,7 +9,7 @@ class RedisTool extends AbstractService
     var $files;
     var $site;
 
-    const REDIS_CONF = '/usr/local/etc/redis.conf';
+    const REDIS_CONF = HOMEBREW_PREFIX . '/etc/redis.conf';
 
     /**
      * Create a new instance.
