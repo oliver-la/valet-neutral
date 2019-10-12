@@ -24,7 +24,7 @@ class Binaries
      * 'bin_key_name' => [
      *    'url' => 'https://example.com/filename.extension'
      *    'shasum' => 'shasum of the downloaded file, for security',
-     *    'bin_location' => '/usr/local/bin'
+     *    'bin_location' => HOMEBREW_PREFIX . '/bin/'
      * ]
      *
      * @formatter:on

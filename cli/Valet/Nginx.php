@@ -84,7 +84,7 @@ class Nginx
         );
 
         $this->files->putAsUser(
-            '/usr/local/etc/nginx/valet/mailhog.conf',
+            HOMEBREW_PREFIX . '/etc/nginx/valet/mailhog.conf',
             str_replace(
                 ['VALET_DOMAIN'],
                 [$domain],
@@ -93,7 +93,7 @@ class Nginx
         );
 
         $this->files->putAsUser(
-            '/usr/local/etc/nginx/valet/elasticsearch.conf',
+            HOMEBREW_PREFIX . '/etc/nginx/valet/elasticsearch.conf',
             str_replace(
                 ['VALET_DOMAIN'],
                 [$domain],

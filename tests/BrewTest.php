@@ -150,14 +150,14 @@ php7');
     public function test_linked_php_returns_linked_php_formula_name()
     {
         $files = Mockery::mock(Filesystem::class);
-        $files->shouldReceive('isLink')->once()->with('/usr/local/bin/php')->andReturn(true);
-        $files->shouldReceive('readLink')->once()->with('/usr/local/bin/php')->andReturn('/test/path/php@7.1/test');
+        $files->shouldReceive('isLink')->once()->with(HOMEBREW_PREFIX . '/bin/php')->andReturn(true);
+        $files->shouldReceive('readLink')->once()->with(HOMEBREW_PREFIX . '/bin/php')->andReturn('/test/path/php@7.1/test');
         swap(Filesystem::class, $files);
         $this->assertSame('php@7.1', resolve(Brew::class)->linkedPhp(true));
 
         $files = Mockery::mock(Filesystem::class);
-        $files->shouldReceive('isLink')->once()->with('/usr/local/bin/php')->andReturn(true);
-        $files->shouldReceive('readLink')->once()->with('/usr/local/bin/php')->andReturn('/test/path/php@5.6/test');
+        $files->shouldReceive('isLink')->once()->with(HOMEBREW_PREFIX . '/bin/php')->andReturn(true);
+        $files->shouldReceive('readLink')->once()->with(HOMEBREW_PREFIX . '/bin/php')->andReturn('/test/path/php@5.6/test');
         swap(Filesystem::class, $files);
         $this->assertSame('php@5.6', resolve(Brew::class)->linkedPhp(true));
     }
@@ -169,7 +169,7 @@ php7');
     public function test_linked_php_throws_exception_if_no_php_link()
     {
         $files = Mockery::mock(Filesystem::class);
-        $files->shouldReceive('isLink')->once()->with('/usr/local/bin/php')->andReturn(false);
+        $files->shouldReceive('isLink')->once()->with(HOMEBREW_PREFIX . '/bin/php')->andReturn(false);
         swap(Filesystem::class, $files);
         resolve(Brew::class)->linkedPhp();
     }
@@ -181,8 +181,8 @@ php7');
     public function test_linked_php_throws_exception_if_unsupported_php_version_is_linked()
     {
         $files = Mockery::mock(Filesystem::class);
-        $files->shouldReceive('isLink')->once()->with('/usr/local/bin/php')->andReturn(true);
-        $files->shouldReceive('readLink')->once()->with('/usr/local/bin/php')->andReturn('/test/path/php42/test');
+        $files->shouldReceive('isLink')->once()->with(HOMEBREW_PREFIX . '/bin/php')->andReturn(true);
+        $files->shouldReceive('readLink')->once()->with(HOMEBREW_PREFIX . '/bin/php')->andReturn('/test/path/php42/test');
         swap(Filesystem::class, $files);
         resolve(Brew::class)->linkedPhp();
     }
