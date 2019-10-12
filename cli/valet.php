@@ -40,7 +40,7 @@ if (is_dir(VALET_HOME_PATH)) {
  */
 $app->command('install', function () {
     PhpFpm::checkInstallation();
-    Mon::install();
+    Mon::configure();
 
     Nginx::stop();
     PhpFpm::stop();
