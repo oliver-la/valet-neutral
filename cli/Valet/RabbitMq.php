@@ -43,7 +43,9 @@ class RabbitMq extends AbstractService
             info('[rabbitmq] already installed');
         } else {
             $this->brew->installOrFail('rabbitmq');
-            $this->cli->quietly('sudo brew services stop rabbitmq');
+            if (PHP_OS === 'Darwin') {
+                $this->cli->quietly('sudo brew services stop rabbitmq');
+            }
         }
         $this->setEnabled(self::STATE_ENABLED);
         $this->restart();

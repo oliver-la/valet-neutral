@@ -7,17 +7,13 @@ WORKING_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 VERSION="0.4.1"
 CONFIG=$WORKING_DIR/../mongroup.conf
-PIDS=$HOME/.valet/pids
-LOGS=$HOME/.valet/logs
+PIDS=$HOME/.valet/Pids
+LOGS=$HOME/.valet/Log
 ON_RESTART=:
 ON_ERROR=:
 MON="sudo $WORKING_DIR/mon"
 
 ENV="HOMEBREW_PREFIX='$HOMEBREW_PREFIX'"
-
-mkdir -p $PIDS
-mkdir -p $LOGS
-touch $CONFIG
 
 #
 # Output usage.

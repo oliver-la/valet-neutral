@@ -189,3 +189,9 @@ function user()
 	return '';
 }
 
+function group()
+{
+    $gid = posix_getpwnam(user())['gid'];
+    return posix_getgrgid($gid)['name'];
+}
+
