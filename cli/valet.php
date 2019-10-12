@@ -38,7 +38,7 @@ if (is_dir(VALET_HOME_PATH)) {
 /**
  * Allow Valet to be run more conveniently by allowing the Node proxy to run password-less sudo.
  */
-$app->command('install [--with-mariadb]', function ($withMariadb) {
+$app->command('install', function () {
     PhpFpm::checkInstallation();
 
     Nginx::stop();
@@ -52,7 +52,7 @@ $app->command('install [--with-mariadb]', function ($withMariadb) {
     Nginx::install();
     PhpFpm::install();
     DnsMasq::install();
-    Mysql::install($withMariadb ? 'mariadb' : 'mysql@5.7');
+    Mysql::install();
     RedisTool::install();
     Mailhog::install();
     Nginx::restart();
@@ -312,8 +312,7 @@ if (is_dir(VALET_HOME_PATH)) {
                     Nginx::restart();
                     break;
                 }
-                case 'mysql':
-                case 'mariadb': {
+                case 'mysql': {
                     Mysql::restart();
                     break;
                 }

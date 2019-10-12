@@ -91,7 +91,7 @@ class Mysql
     public function verifyType($type)
     {
         if (!\in_array($type, $this->supportedVersions())) {
-            throw new DomainException('Invalid Mysql type given. Available: mysql@5.7/mariadb');
+            throw new DomainException('Invalid Mysql type given. Available: mysql@5.7');
         }
     }
 
@@ -102,7 +102,7 @@ class Mysql
      */
     public function supportedVersions()
     {
-        return ['mysql@5.7', 'mariadb'];
+        return ['mysql@5.7'];
     }
 
     /**
@@ -159,9 +159,6 @@ class Mysql
         }
 
         $contents = $this->files->get(__DIR__ . '/../stubs/my.cnf');
-        if ($type === 'mariadb') {
-            $contents = \str_replace('show_compatibility_56=ON', '', $contents);
-        }
 
         $this->files->putAsUser(
             static::MYSQL_CONF,
