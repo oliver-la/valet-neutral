@@ -38,8 +38,11 @@ class DnsMasq
         // without needing to modify the "primary" DnsMasq configuration files again.
         $this->createCustomConfigFile($domain);
 
-        $this->createDomainResolver($domain);
-
+        if (PHP_OS === 'Darwin') {
+            $this->createDomainResolver($domain);
+        } else {
+            warning('[Dnsmasq] Attention Linux user: You need to set your nameserver manually to 127.0.0.1 to resolve.');
+        }
         $this->brew->restartService('dnsmasq');
     }
 
