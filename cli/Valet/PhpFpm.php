@@ -86,7 +86,7 @@ class PhpFpm
      */
     function restart()
     {
-        $this->brew->restartService('php-fpm');
+        $this->brew->restartService('php');
     }
 
     /**
@@ -96,7 +96,7 @@ class PhpFpm
      */
     function stop()
     {
-        $this->brew->stopService('php-fpm');
+        $this->brew->stopService('php');
     }
 
     /**
