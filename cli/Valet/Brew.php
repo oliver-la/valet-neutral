@@ -179,8 +179,8 @@ class Brew
             if ($this->installed($service)) {
                 info('[' . $service . '] Restarting');
 
-                $this->cli->quietly(Mon::BINARY . ' stop ' . $service);
-                $this->cli->quietly(Mon::BINARY . ' start ' . $service);
+                $this->cli->quietlyAsUser(Mon::BINARY . ' stop ' . $service);
+                $this->cli->quietlyAsUser(Mon::BINARY . ' start ' . $service);
             }
         }
     }
@@ -198,7 +198,7 @@ class Brew
             if ($this->installed($service)) {
                 info('[' . $service . '] Stopping');
 
-                $this->cli->quietly(Mon::BINARY . ' stop ' . $service);
+                $this->cli->quietlyAsUser(Mon::BINARY . ' stop ' . $service);
             }
         }
     }
