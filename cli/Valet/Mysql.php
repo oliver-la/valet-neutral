@@ -162,7 +162,7 @@ class Mysql
 
         $this->files->putAsUser(
             static::MYSQL_CONF,
-            \str_replace('VALET_HOME_PATH', VALET_HOME_PATH, $contents)
+            \str_replace(['VALET_HOME_PATH', 'VALET_USER'], [VALET_HOME_PATH, user()], $contents)
         );
     }
 
