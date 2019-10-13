@@ -130,7 +130,7 @@ start() {
     local pidfile=$PIDS/$name.pid
     if [ -z "$app" -o "$app" == "$name" ]; then
       if [ -f $pidfile ]; then
-        local pid=$(cat $pidfile)
+        local pid=$(sudo cat $pidfile)
         alive $pid
         if [ $? -eq 0 ]; then
           printf "  \e[36m%10s\e[m : %s\n" "running" $name
