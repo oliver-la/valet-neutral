@@ -294,7 +294,7 @@ class PhpFpm
         $versions = self::SUPPORTED_PHP_FORMULAE;
 
         foreach ($versions as $version => $brewname) {
-            if (strpos($resolvedPath, 'php/' . $version) !== false) {
+            if (strpos($resolvedPath, $brewname) !== false) {
                 return $version;
             }
         }
